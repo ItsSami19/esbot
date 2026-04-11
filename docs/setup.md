@@ -99,6 +99,29 @@ After startup, the services are available at:
 
 ---
 
+## pgAdmin Database Connection
+
+To view and manage the database in pgAdmin:
+
+1. Open `http://localhost:5056` in your browser
+2. Log in with:
+   - Email: `admin@example.com`
+   - Password: `admin123`
+3. Right-click on "Servers" in the left sidebar and select "Register" > "Server..."
+4. In the "General" tab:
+   - Name: `esbot-db` (or any name you prefer)
+5. In the "Connection" tab:
+   - Host name/address: `db`
+   - Port: `5432`
+   - Username: `esbot_user`
+   - Password: `esbot_password`
+   - Maintenance database: `esbot`
+6. Click "Save"
+
+The database should now appear in the sidebar and you can explore tables, run queries, etc.
+
+---
+
 ## Stop the Environment
 
 To stop all containers:
