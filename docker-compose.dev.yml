@@ -1,0 +1,70 @@
+name: esbot-dev-compose
+
+services:
+  db:
+    image: postgres:17
+    env_file: .env
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -h localhost -p 5432 -U $$POSTGRES_USER -d $$POSTGRES_DB || exit 1',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    env_file: .env
+    ports:
+      - '8000:8000'
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    volumes:
+      - ./backend:/app
+    command: >
+      sh -c "alembic upgrade head &&
+           uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    env_file: .env
+    ports:
+      - '3000:3000'
+    depends_on:
+      backend:
+        condition: service_started
+    restart: always
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  pgadmin:
+    image: dpage/pgadmin4
+    env_file: .env
+    ports:
+      - '5056:80'
+    environment:
+      PGADMIN_DISABLE_POSTFIX: 'true'
+      PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: 'False'
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  postgres_data:
+  pgadmin_data:
