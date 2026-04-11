@@ -25,11 +25,11 @@ class QuizStatus(str, PyEnum):
 
 class UserSession(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    title: str = Field(nullable=False)
+    title: str = Field(..., nullable=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     last_activity_at: datetime = Field(default_factory=datetime.utcnow)
     status: SessionStatus = Field(default=SessionStatus.ACTIVE)
-    user_identifier: str = Field(nullable=False)
+    user_identifier: str = Field(..., nullable=False)
 
     # Relationships
     messages: List["Message"] = Relationship(back_populates="session")
@@ -39,11 +39,11 @@ class UserSession(SQLModel, table=True):
 
 class Message(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    session_id: int = Field(foreign_key="usersession.id")
-    sender: Sender = Field()
-    content: str = Field(nullable=False)
+    session_id: int = Field(..., foreign_key="usersession.id")
+    sender: Sender = Field(...)
+    content: str = Field(..., nullable=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    order: int = Field(nullable=False)
+    order: int = Field(..., nullable=False)
 
     # Relationships
     session: UserSession = Relationship(back_populates="messages")
@@ -55,8 +55,8 @@ class Message(SQLModel, table=True):
 
 class QuizRequest(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    session_id: int = Field(foreign_key="usersession.id")
-    topic: str = Field(nullable=False)
+    session_id: int = Field(..., foreign_key="usersession.id")
+    topic: str = Field(..., nullable=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     status: QuizStatus = Field(default=QuizStatus.PENDING)
 
@@ -71,10 +71,10 @@ class QuizRequest(SQLModel, table=True):
 
 class QuizItem(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    quiz_request_id: int = Field(foreign_key="quizrequest.id")
-    question_text: str = Field(nullable=False)
+    quiz_request_id: int = Field(..., foreign_key="quizrequest.id")
+    question_text: str = Field(..., nullable=False)
     answer_options: Optional[dict] = Field(default=None, sa_type=JSON)
-    correct_answer: str = Field(nullable=False)
+    correct_answer: str = Field(..., nullable=False)
     difficulty: Optional[str] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -89,9 +89,9 @@ class QuizItem(SQLModel, table=True):
 
 class SubmittedAnswer(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    quiz_item_id: int = Field(foreign_key="quizitem.id")
-    session_id: int = Field(foreign_key="usersession.id")
-    user_response: str = Field(nullable=False)
+    quiz_item_id: int = Field(..., foreign_key="quizitem.id")
+    session_id: int = Field(..., foreign_key="usersession.id")
+    user_response: str = Field(..., nullable=False)
     submitted_at: datetime = Field(default_factory=datetime.utcnow)
 
     # Relationships
@@ -106,9 +106,9 @@ class SubmittedAnswer(SQLModel, table=True):
 
 class EvaluationResult(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    submitted_answer_id: int = Field(foreign_key="submittedanswer.id")
-    is_correct: bool = Field(nullable=False)
-    feedback: str = Field(nullable=False)
+    submitted_answer_id: int = Field(..., foreign_key="submittedanswer.id")
+    is_correct: bool = Field(..., nullable=False)
+    feedback: str = Field(..., nullable=False)
     explanation: Optional[str] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 

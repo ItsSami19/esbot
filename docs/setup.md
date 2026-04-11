@@ -120,6 +120,8 @@ To view and manage the database in pgAdmin:
 
 The database should now appear in the sidebar and you can explore tables, run queries, etc.
 
+---
+
 ## Stop the Environment
 
 To stop all containers:
