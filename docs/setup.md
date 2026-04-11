@@ -1,4 +1,4 @@
-# ESBot Backend Setup
+# ESBot Setup
 
 ## Overview
 
