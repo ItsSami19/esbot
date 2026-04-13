@@ -34,7 +34,6 @@ class UserSession(SQLModel, table=True):
     # Relationships
     messages: List["Message"] = Relationship(back_populates="session")
     quiz_requests: List["QuizRequest"] = Relationship(back_populates="session")
-    submitted_answers: List["SubmittedAnswer"] = Relationship(back_populates="session")
 
 
 class Message(SQLModel, table=True):
@@ -90,23 +89,21 @@ class QuizItem(SQLModel, table=True):
 class SubmittedAnswer(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     quiz_item_id: int = Field(..., foreign_key="quizitem.id")
-    session_id: int = Field(..., foreign_key="usersession.id")
     user_response: str = Field(..., nullable=False)
     submitted_at: datetime = Field(default_factory=datetime.utcnow)
 
     # Relationships
     quiz_item: QuizItem = Relationship(back_populates="submitted_answers")
-    session: UserSession = Relationship(back_populates="submitted_answers")
     evaluation_result: Optional["EvaluationResult"] = Relationship(back_populates="submitted_answer")
 
     @classmethod
-    def create(cls, quiz_item_id: int, session_id: int, user_response: str) -> "SubmittedAnswer":
-        return cls(quiz_item_id=quiz_item_id, session_id=session_id, user_response=user_response)
+    def create(cls, quiz_item_id: int, user_response: str) -> "SubmittedAnswer":
+        return cls(quiz_item_id=quiz_item_id, user_response=user_response)
 
 
 class EvaluationResult(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    submitted_answer_id: int = Field(..., foreign_key="submittedanswer.id")
+    submitted_answer_id: int = Field(..., foreign_key="submittedanswer.id", unique=True)
     is_correct: bool = Field(..., nullable=False)
     feedback: str = Field(..., nullable=False)
     explanation: Optional[str] = Field(default=None)

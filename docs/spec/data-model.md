@@ -18,7 +18,6 @@ The ESBot domain model consists of the following core entities:
 - QuizRequest 1:N QuizItems
 - QuizItem 1:N SubmittedAnswers
 - SubmittedAnswer 1:1 EvaluationResult
-- SubmittedAnswer N:1 UserSession (audit trail)
 
 ## Persistence Strategy
 
@@ -29,7 +28,7 @@ The application uses a relational database (PostgreSQL) for persistence. This ch
 - Transaction support for multi-step operations (e.g., quiz generation and evaluation)
 - Efficient joins for reporting and analytics
 
-The models are implemented using SQLAlchemy/SQLModel for type safety and ORM capabilities.
+The models are implemented using SQLModel, which builds on SQLAlchemy and provides ORM capabilities and type-safe model definitions.
 
 ## Entity-relationship Diagram
 
