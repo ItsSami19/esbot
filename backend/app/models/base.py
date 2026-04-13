@@ -1,9 +1,13 @@
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum as PyEnum
 
 from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import JSON
+
+
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
 
 
 class Sender(str, PyEnum):
@@ -26,8 +30,8 @@ class QuizStatus(str, PyEnum):
 class UserSession(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     title: str = Field(..., nullable=False)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    last_activity_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=utc_now)
+    last_activity_at: datetime = Field(default_factory=utc_now)
     status: SessionStatus = Field(default=SessionStatus.ACTIVE)
     user_identifier: str = Field(..., nullable=False)
 
@@ -41,7 +45,7 @@ class Message(SQLModel, table=True):
     session_id: int = Field(..., foreign_key="usersession.id")
     sender: Sender = Field(...)
     content: str = Field(..., nullable=False)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=utc_now)
     order: int = Field(..., nullable=False)
 
     # Relationships
@@ -56,7 +60,7 @@ class QuizRequest(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     session_id: int = Field(..., foreign_key="usersession.id")
     topic: str = Field(..., nullable=False)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=utc_now)
     status: QuizStatus = Field(default=QuizStatus.PENDING)
 
     # Relationships
@@ -75,7 +79,7 @@ class QuizItem(SQLModel, table=True):
     answer_options: Optional[dict] = Field(default=None, sa_type=JSON)
     correct_answer: str = Field(..., nullable=False)
     difficulty: Optional[str] = Field(default=None)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=utc_now)
 
     # Relationships
     quiz_request: QuizRequest = Relationship(back_populates="quiz_items")
@@ -90,7 +94,7 @@ class SubmittedAnswer(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     quiz_item_id: int = Field(..., foreign_key="quizitem.id")
     user_response: str = Field(..., nullable=False)
-    submitted_at: datetime = Field(default_factory=datetime.utcnow)
+    submitted_at: datetime = Field(default_factory=utc_now)
 
     # Relationships
     quiz_item: QuizItem = Relationship(back_populates="submitted_answers")
@@ -107,7 +111,7 @@ class EvaluationResult(SQLModel, table=True):
     is_correct: bool = Field(..., nullable=False)
     feedback: str = Field(..., nullable=False)
     explanation: Optional[str] = Field(default=None)
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=utc_now)
 
     # Relationships
     submitted_answer: SubmittedAnswer = Relationship(back_populates="evaluation_result")
