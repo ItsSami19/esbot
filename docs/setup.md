@@ -6,9 +6,11 @@ The project uses the following backend-related technologies:
 
 - **FastAPI** for the backend API
 - **SQLModel** for database models
+- **Next.js** as frontend framework
 - **PostgreSQL** as the relational database
 - **Alembic** for database migrations
-- **pytest** for testing
+- **pytest** for unit and smoke testing
+- **behave** for BDD acceptance testing
 - **Docker Compose** for local development setup
 
 ---
@@ -20,6 +22,9 @@ esbot/
 ├─ backend/
 │  ├─ app/
 │  ├─ tests/
+│  ├─ features/
+│  │  ├─ steps/
+│  │  └─ environment.py
 │  ├─ alembic/
 │  ├─ requirements.txt
 │  ├─ Dockerfile.backend
@@ -42,7 +47,7 @@ Make sure the following tools are installed:
 - **WSL2** (recommended on Windows)
 - **Git**
 
-No local installation of FastAPI, SQLModel, PostgreSQL, or Next.js is required, because all services run in Docker containers.
+No local installation of FastAPI, SQLModel, PostgreSQL, Next.js, pytest, or behave is required, because all services run in Docker containers.
 
 ---
 
@@ -174,13 +179,42 @@ This means that after a fresh database reset, all existing migrations are automa
 
 ## Running Tests
 
-The backend uses **pytest** as the test framework.
+The backend uses **pytest** for unit and smoke tests and **behave** for BDD acceptance tests.
 
-Run tests with:
+### Run unit and smoke tests
 
 ```bash
 docker compose -f docker-compose.dev.yml run --rm backend pytest
 ```
+
+### Run all BDD acceptance tests
+
+```bash
+docker compose -f docker-compose.dev.yml run --rm backend behave
+```
+
+### Run a single BDD feature file
+
+```bash
+docker compose -f docker-compose.dev.yml run --rm backend behave features/resume_learning_session.feature
+```
+
+Replace the feature path with another file if needed, for example:
+
+```bash
+docker compose -f docker-compose.dev.yml run --rm backend behave features/answer_evaluation.feature
+docker compose -f docker-compose.dev.yml run --rm backend behave features/contextualized_response.feature
+```
+
+### Run the full backend test suite
+
+To execute both the unit tests from Exercise 4 and the BDD acceptance tests from Exercise 5, run:
+
+```bash
+docker compose -f docker-compose.dev.yml run --rm backend sh -c "pytest && behave"
+```
+
+This command first runs the **pytest** test suite and then executes all **behave** feature tests.
 
 ---
 
@@ -201,7 +235,7 @@ Expected response:
 }
 ```
 
-To run the smoke test and all other backend tests, use:
+To run the smoke test and all other unit tests, use:
 
 ```bash
 docker compose -f docker-compose.dev.yml run --rm backend pytest
@@ -254,5 +288,13 @@ docker compose -f docker-compose.dev.yml up --build
 ### Migration issues
 
 Make sure all models are imported in `app/models/__init__.py`, otherwise Alembic may not detect them.
+
+### BDD step issues
+
+If `behave` reports missing, undefined, or ambiguous steps, make sure that:
+
+- the feature files are located in `backend/features/`
+- the step definition files are located in `backend/features/steps/`
+- all step texts in the feature files have matching step definitions
 
 ---
