@@ -218,6 +218,26 @@ This command first runs the **pytest** test suite and then executes all **behave
 
 ---
 
+## Static Analysis
+
+The backend uses **pylint** as a linter and **mypy** as a type checker for local static analysis.
+
+### Run pylint
+
+```bash
+docker compose -f docker-compose.dev.yml run --rm backend pylint --rcfile=.pylintrc app
+```
+
+### Run mypy
+
+```bash
+docker compose -f docker-compose.dev.yml run --rm backend mypy --config-file mypy.ini app
+```
+
+These commands run the configured static analysis tools locally inside the backend container.
+
+---
+
 ## Smoke Test
 
 A simple smoke test is included to verify that the backend application starts correctly and that the health endpoint works as expected.
