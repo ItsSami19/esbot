@@ -8,3 +8,5 @@ python-dotenv
 alembic
 sqlalchemy
 behave
+pylint
+mypy
