@@ -10,3 +10,4 @@ sqlalchemy
 behave
 pylint
 mypy
+pip-audit

@@ -100,3 +100,36 @@ warnings (score 9.12/10) and mypy type annotation issues related to
 SQLModel's optional IDs - are documented there in detail. Resolving these
 findings was not part of the exercise scope; the goal was to integrate,
 configure, and run both tools, which has been completed.
+
+---
+
+## Exercise 9.2 Enhancements
+
+### Security Audit with pip-audit
+
+We added a dedicated `security-audit` job to the pipeline that runs
+[pip-audit](https://pypi.org/project/pip-audit/) against `backend/requirements.txt`.
+
+**What it does:** pip-audit scans all Python dependencies for known vulnerabilities
+by checking them against the PyPI Advisory Database. It flags any package version
+that has a published CVE or security advisory.
+
+**Why it fits ESBot:** ESBot's backend pulls in several third-party packages
+(`fastapi`, `sqlmodel`, `uvicorn`, `alembic`, `psycopg`) that are updated
+regularly. A vulnerability in any of these could expose the API or the database
+layer. Running pip-audit in CI means we catch affected versions automatically
+on every push, without having to check manually.
+
+**Added value vs. cost:** The job adds roughly 15–35 seconds to the pipeline.
+There is no external service dependency, no token or secret required, and
+false positives are rare since pip-audit only reports confirmed advisories.
+Maintenance effort is minimal- the tool updates its advisory data automatically.
+
+**Local execution:** The same check runs locally with:
+
+```bash
+docker compose -f docker-compose.dev.yml run --rm backend pip-audit -r requirements.txt
+```
+
+The `security-audit` job runs in parallel with `backend-test`, so it does not
+add to the critical path of the pipeline.
