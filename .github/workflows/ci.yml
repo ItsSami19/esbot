@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pytest (unit tests + smoke tests)
+        run: PYTHONPATH=. pytest
+
+      - name: Run behave (BDD acceptance tests)
+        run: PYTHONPATH=. behave
+
+      - name: Run pylint (static analysis)
+        run: pylint --rcfile=.pylintrc app
+
+      - name: Run mypy (type checking)
+        run: mypy --config-file mypy.ini app
