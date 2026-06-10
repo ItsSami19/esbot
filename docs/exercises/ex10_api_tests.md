@@ -1,4 +1,4 @@
-# Exercise 11 – API Testing
+# Exercise 10 – API Testing
 
 ## Goal
 
