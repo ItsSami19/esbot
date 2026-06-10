@@ -55,7 +55,7 @@ After completing this exercise, you should be able to:
 
 ---
 
-## Exercise 11.1 (10 Points): Reflect on Your REST API
+## Exercise 10.1 (10 Points): Reflect on Your REST API
 
 ### Task
 
@@ -74,14 +74,14 @@ Create or update a file `docs/api/api-reference.md` in your repository containin
 - **Error responses** — document at least the `404 Not Found`, `422 Unprocessable Entity`, and `500 Internal Server Error` cases with example response bodies.
 - **Setup instructions** — step-by-step instructions for a fresh checkout: install dependencies, configure environment variables, start the backend, and verify the health endpoint.
 
-### Deliverables (11.1)
+### Deliverables (10.1)
 
 - Running backend accessible at a documented base URL.
 - `docs/api/api-reference.md` covering all implemented endpoints with request/response schemas and error behavior.
 
 ---
 
-## Exercise 11.2 (10 Points): Manual API Testing
+## Exercise 10.2 (10 Points): Manual API Testing
 
 ### Task
 
@@ -126,7 +126,7 @@ Perform at least **two** invalid request tests and document the actual response 
 | `POST /api/v1/sessions/{session_id}/quiz/{wrong_id}/answer` | `404 Not Found` |
 | `POST /api/v1/sessions/{session_id}/messages` after the session is deleted | `404 Not Found` |
 
-### Deliverables (11.2)
+### Deliverables (10.2)
 
 - Screenshots or exported request/response pairs for each step of the happy-path workflow (saved to `docs/api/manual-tests/`).
 - Screenshots or request/response pairs for the two error scenarios.
@@ -134,7 +134,7 @@ Perform at least **two** invalid request tests and document the actual response 
 
 ---
 
-## Exercise 11.3 (10 Points): Automated API Testing
+## Exercise 10.3 (10 Points): Automated API Testing
 
 ### Task
 
@@ -183,7 +183,7 @@ Implement at least five tests covering the happy-path and at least four negative
 - Tests should **not** depend on execution order — use setup/teardown hooks to create and clean up sessions per test or test class.
 - **Assert response bodies**, not only status codes — verify that returned JSON fields have the expected types and non-empty values.
 
-### Deliverables (11.3)
+### Deliverables (10.3)
 
 - Automated test suite committed to your repository (e.g., `tests/api/` or `src/test/api/`).
 - All tests passing locally with a single command (document this command in `docs/api/automated-tests.md`).
@@ -191,7 +191,7 @@ Implement at least five tests covering the happy-path and at least four negative
 
 ---
 
-## Exercise 11.4 (10 Points): Performance & Load Testing
+## Exercise 10.4 (10 Points): Performance & Load Testing
 
 ### Task
 
@@ -247,7 +247,7 @@ After each test run, collect and document the following metrics:
 | Error rate | Percentage of non-2xx responses |
 | Peak concurrency reached | Maximum VUs without exceeding the error threshold |
 
-### Deliverables (11.4)
+### Deliverables (10.4)
 
 - Test plan files committed to your repository (e.g., `docs/api/performance/` — `.jmx`, Gatling simulation class, `locustfile.py`, or `k6` script).
 - Generated test reports or screenshots of dashboards for all three profiles.
