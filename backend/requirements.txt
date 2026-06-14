@@ -11,3 +11,4 @@ behave
 pylint
 mypy
 pip-audit
+locust

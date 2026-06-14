@@ -13,9 +13,9 @@ app.add_middleware(
 )
 
 
-app.include_router(sessions_router)
+app.include_router(sessions_router, prefix="/api/v1")
 
 
-@app.get("/health")
+@app.get("/api/v1/health")
 def health():
     return {"status": "ok"}
