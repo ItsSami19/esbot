@@ -1,4 +1,4 @@
-# Exercise 12 – UI and End-to-End Testing
+# Exercise 11 – UI and End-to-End Testing
 
 ## Goal
 
@@ -66,7 +66,7 @@ After completing this exercise, you should be able to:
 
 ---
 
-## Exercise 12.1 (10 Points): UI Setup and Manual Testing
+## Exercise 11.1 (10 Points): UI Setup and Manual Testing
 
 ### Task
 
@@ -82,7 +82,7 @@ For each test case, record the following in `docs/ui/manual-tests/report.md`:
 6. Pass / Fail
 7. Screenshot for any failed or unexpected outcome (if necessary)
 
-### Deliverables (12.1)
+### Deliverables (11.1)
 
 - `docs/ui/manual-tests/report.md` — completed test report for all six test cases.
 - Screenshots or screen recordings for any failed test cases (stored in `docs/ui/manual-tests/screenshots/`).
@@ -90,7 +90,7 @@ For each test case, record the following in `docs/ui/manual-tests/report.md`:
 
 ---
 
-## Exercise 12.2 (10 Points): Automated E2E Tests
+## Exercise 11.2 (10 Points): Automated E2E Tests
 
 ### Task
 
@@ -131,7 +131,7 @@ E2E tests interact with an asynchronous UI. Use the built-in waiting mechanisms 
 | Playwright | Auto-wait built in; use `expect(locator).toBeVisible()` |
 | Selenium | Use `WebDriverWait` + `expected_conditions` |
 
-### Deliverables (12.2)
+### Deliverables (11.2)
 
 - E2E test files committed to your repository (extend the `cypress/e2e/`, `playwright/`, or `e2e/selenium/` folders, or create equivalent structure for your own frontend).
 - All tests passing locally with a single command (document this in `docs/ui/e2e-setup.md`).
@@ -139,7 +139,7 @@ E2E tests interact with an asynchronous UI. Use the built-in waiting mechanisms 
 
 ---
 
-## Exercise 12.3 (10 Points): Execute, Record, and Reflect
+## Exercise 11.3 (10 Points): Execute, Record, and Reflect
 
 ### Task
 
@@ -192,14 +192,14 @@ Create `docs/ui/e2e-report.md` with the following sections:
    - At which layer of the test pyramid (unit, API, E2E) would you detect each of the bugs your tests could catch? Why?
    - How would these tests behave with a real (non-mock) LLM? What would you change?
 
-### Deliverables (12.3)
+### Deliverables (11.3)
 
 - `docs/ui/e2e-report.md` — execution summary, outputs, screenshots, and reflection.
 - All E2E tests passing in headless mode on a clean run (or failures explained and justified in the report).
 
 ---
 
-## Exercise 12.4 (10 Points): CI Pipeline Integration (Optional)
+## Exercise 11.4 (10 Points): CI Pipeline Integration (Optional)
 
 ### Task
 
@@ -225,7 +225,7 @@ Create a new job in a new workflow file (e.g., `.github/workflows/e2e.yml`). The
    - How artifacts (screenshots/traces) are preserved on failure
    - Any trade-offs: runtime, flakiness, resource cost
 
-### Deliverables (12.4)
+### Deliverables (11.4)
 
 - Updated `.github/workflows/ci.yml` (or new `e2e.yml`) with the E2E job.
 - Evidence of at least one successful green pipeline run (link or screenshot in `docs/ui/ci-e2e.md`).
