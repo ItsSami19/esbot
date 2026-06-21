@@ -59,11 +59,21 @@ class TestHappyPath:
 
         assert response.status_code == 201
         body = response.json()
-        assert isinstance(body["id"], int)
-        assert body["session_id"] == created_session["id"]
-        assert body["sender"] == "user"
-        assert body["content"] == "What is a decorator?"
-        assert body["order"] == 1
+
+        # User-Nachricht prüfen
+        user_msg = body["user_message"]
+        assert isinstance(user_msg["id"], int)
+        assert user_msg["session_id"] == created_session["id"]
+        assert user_msg["sender"] == "user"
+        assert user_msg["content"] == "What is a decorator?"
+        assert user_msg["order"] == 1
+
+        # AI-Antwort prüfen
+        ai_msg = body["ai_message"]
+        assert isinstance(ai_msg["id"], int)
+        assert ai_msg["sender"] == "ai"
+        assert ai_msg["content"] == 'Hello, your question was: "What is a decorator?"'
+        assert ai_msg["order"] == 2
 
     def test_get_message_history_returns_200_and_contains_sent_message(
         self, client: TestClient, created_session: dict
@@ -79,8 +89,11 @@ class TestHappyPath:
 
         assert response.status_code == 200
         messages = response.json()["messages"]
-        assert len(messages) == 1
+        assert len(messages) == 2  # User-Msg + AI-Msg
         assert messages[0]["content"] == "What is a decorator?"
+        assert messages[0]["sender"] == "user"
+        assert messages[1]["sender"] == "ai"
+        assert messages[1]["content"] == 'Hello, your question was: "What is a decorator?"'
 
     def test_delete_session_returns_204_and_session_is_gone(
         self, client: TestClient, created_session: dict

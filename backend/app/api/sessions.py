@@ -10,6 +10,7 @@ from app.api.schemas import (
     MessageCreate,
     MessageResponse,
     MessageListResponse,
+    SubmitMessageResponse,
 )
 from app.models.base import Sender
 from app.repositories.session_repository import SessionRepository
@@ -20,6 +21,8 @@ router = APIRouter(prefix="/sessions", tags=["sessions"])
 def get_session_repository(db: Session) -> SessionRepository:
     return SessionRepository(db)
 
+def generate_ai_reply(user_content: str) -> str:
+    return f'Hello, your question was: "{user_content}"'
 
 # 1) POST /api/v1/sessions
 @router.post(
@@ -94,7 +97,7 @@ def delete_session(
 # 5) POST /api/v1/sessions/{session_id}/messages
 @router.post(
     "/{session_id}/messages",
-    response_model=MessageResponse,
+    response_model=SubmitMessageResponse,   # <-- geändert
     status_code=status.HTTP_201_CREATED,
 )
 def submit_message(
@@ -109,12 +112,27 @@ def submit_message(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Session not found",
         )
-    message = repo.append_message(
+
+    # 1) User-Nachricht speichern
+    user_message = repo.append_message(
         session_id=session_id,
-        sender=payload.sender,
+        sender=Sender.USER,
         content=payload.content,
     )
-    return message
+
+    # 2) Deterministische AI-Antwort generieren & speichern
+    ai_reply_content = generate_ai_reply(payload.content)
+    ai_message = repo.append_message(
+        session_id=session_id,
+        sender=Sender.AI,
+        content=ai_reply_content,
+    )
+
+    # 3) Beide zurückgeben
+    return SubmitMessageResponse(
+        user_message=user_message,
+        ai_message=ai_message,
+    )
 
 
 # 6) GET /api/v1/sessions/{session_id}/messages

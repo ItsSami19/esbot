@@ -46,3 +46,8 @@ class MessageResponse(BaseModel):
 
 class MessageListResponse(BaseModel):
     messages: List[MessageResponse]
+
+
+class SubmitMessageResponse(BaseModel):
+    user_message: MessageResponse
+    ai_message: MessageResponse
